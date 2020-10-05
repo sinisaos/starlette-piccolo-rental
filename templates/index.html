@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero hero-bg d-flex justify-content-center align-items-center"
+  style="padding-top: 150px; padding-bottom: 75px;">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-md-10 col-12 d-flex flex-column justify-content-center align-items-center">
+        <div class="hero-text">
+          <form>
+            <div class="row no-margin">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <span class="form-label">Locations*</span>
+                  <input class="form-control" type="text" placeholder="Search locations" required>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <span class="form-label">Check In*</span>
+                  <input class="form-control" type="date" required>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <span class="form-label">Check Out*</span>
+                  <input class="form-control" type="date" required>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <span class="form-label">Guests*</span>
+              <select class="form-control" required>
+                <option value="" selected hidden>Number of guests</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+              </select>
+              <span class="select-arrow"></span>
+            </div>
+
+            <button class="btn btn-outline-info">Search</button>
+
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-6 col-12">
+        <div class="hero-image">
+          <img src="{{ url_for('static', path='images/office.png') }}" class="img-fluid" alt="working girl">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="hero hero-bg d-flex justify-content-center align-items-center"
+  style="padding-top: 75px; padding-bottom: 150px;">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-md-10 col-12 d-flex flex-column justify-content-center align-items-center">
+        <h3>Add your accommodation</h3>
+        <a class="btn btn-outline-success" href="">Add Apartment</a>
+      </div>
+      <div class="col-lg-6 col-12">
+        <div class="hero-image">
+          <img src="{{ url_for('static', path='images/working-girl.png') }}" class="img-fluid" alt="working girl">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

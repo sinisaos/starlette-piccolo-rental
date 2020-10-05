@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="testimonials text-center bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 offset-md-4">
+                {% if user_error %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{ user_error }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+                <h2 class="text-center">Sign In</h2>
+                <br />
+                <form id="loginForm" class="form form-login" method="POST" action="" role="form">
+                    {{ form.csrf_token }}
+                    <div class="form-group">
+                        <label for="">Username*</label>
+                        {{form.username(placeholder="Enter username", class_="form-control")}}
+                        {% for error in form.username.errors %}
+                        <span style="color: red;">*{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <label for="">Password*</label>
+                        {{form.password(placeholder="Enter password", class_="form-control")}}
+                        {% for error in form.password.errors %}
+                        <span style="color: red;">*{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <p><input class="btn btn-outline-info" style="width:100%;" type="submit" value="Submit"></p>
+                </form>
+                <p class="float-left">
+                    Don't have an account? <a href="{{ url_for('register') }}"> Sign up</a>
+                </p>
+                <br>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

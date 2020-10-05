@@ -1,0 +1,38 @@
+body {
+  padding-top: 3.5rem;
+}
+
+label {
+  float: left;
+}
+
+.mu-sidebar-widget-title {
+  background-color: #f6f6f6;
+  border-top: 2px solid #0091ea;
+  color: #323232;
+  font-size: 24px;
+  padding: 16px 20px;
+}
+
+a { 
+	text-decoration: none;
+	color: #2f2f2f;  
+}
+
+.pagination .page-link {
+  color: rgb(51, 36, 36);
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+  margin: 0 4px;
+}
+
+.page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #17a2b8;
+  background-color: #17a2b8;
+}
+
