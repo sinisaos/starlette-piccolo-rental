@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<main role="main">
+    <div class="container">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="mt-5">Edit ad</h1>
+            <br />
+            {% for img in images %}
+            <div class="col-md-3" style="display:inline-block;">
+                <div class="card mb-3 shadow-sm">
+                    <img src="../../{{ img.path }}" style="width: 100%; height: 200px;"><br>
+                    <form action="/ads/image-delete/{{ img.id }}" method="post">
+                        <input type="hidden" name="aid" value="{{ ad.id }}">
+                        <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            <form id="adEditForm" class="form form-ad-edit" method="POST" action="" role="form">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    {{form.title(value=ad.title, class_="form-control")}}
+                    {% for error in form.title.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{form.content(value=form.content.data, cols="35", rows="10",class_="form-control") |safe}}
+                    {% for error in form.content.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{form.price(value=ad.price, class_="form-control")}}
+                    {% for error in form.price.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{form.room(value=ad.room, class_="form-control")}}
+                    {% for error in form.room.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{form.visitor(value=ad.visitor, class_="form-control")}}
+                    {% for error in form.visitor.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{form.city(value=ad.city, class_="form-control")}}
+                    {% for error in form.city.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{form.address(value=ad.address, class_="form-control")}}
+                    {% for error in form.address.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <p><input class="btn btn-outline-info" type="submit" value="Submit"></p>
+            </form>
+            <br>
+
+        </div>
+    </div> <!-- /container -->
+    <script>
+        if (!window.location.hash) {
+            window.location = window.location + '#loaded';
+            window.location.reload();
+        }
+    </script>
+</main>
+{% endblock %}

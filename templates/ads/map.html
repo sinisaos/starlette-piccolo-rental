@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<main role="main">
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+                    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+                    crossorigin="" />
+                <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+                <!-- Make sure you put this AFTER Leaflet's CSS -->
+                <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+                    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+                    crossorigin=""></script>
+                <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+                <div class="container">
+                    <div id="map" style="width: 100%; height: 480px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+        integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script>
+        $.get(location.protocol + '//nominatim.openstreetmap.org/search?format=json&q=' + '{{ city }}', function (data) {
+            var lat = data[0].lat;
+            var lng = data[0].lon;
+
+            // Creating map options
+            var mapOptions = {
+                center: [lat, lng],
+                zoom: 4
+            }
+
+            // Creating a map object
+            var map = new L.map('map', mapOptions);
+
+            // Creating a Layer object
+            var layer = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+            });
+
+            // Adding layer to the map
+            map.addLayer(layer);
+
+            //marker.addTo(map);
+            geocoder = new L.Control.Geocoder.Nominatim();
+
+            var address = [
+                {% for item in results %}
+        ["{{ item.address }}, {{ item.city }}", "{{ item.price }} kn", "<a href='{{ url_for('ad', id=item.id , slug=item.slug) }}'> {{ item.title }}</a>"],
+            {% endfor %}
+        ]
+
+        for (var i = 0; i < address.length; i++) {
+            let ad = address[i][1];
+            let url = address[i][2];
+            geocoder.geocode(address[i][0], function (results) {
+                latLng = new L.LatLng(results[0].center.lat, results[0].center.lng);
+                marker = new L.Marker(latLng);
+                marker.bindPopup(ad + url).openPopup();
+                marker.addTo(map);
+            });
+        }
+
+    });
+    </script>
+    <br>
+</main>
+{% endblock %}

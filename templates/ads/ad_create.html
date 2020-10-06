@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<main role="main">
+    <div class="container">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="mt-5">Create ad</h1>
+            <br />
+            <form id="adForm" class="form form-ad" method="POST" action="" role="form">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    {{form.title(placeholder="Title", class_="form-control")}}
+                    {% for error in form.title.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{form.content(placeholder="Content", cols="35", rows="10",class_="form-control") |safe}}
+                    {% for error in form.content.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{form.price(placeholder="Price", class_="form-control")}}
+                    {% for error in form.price.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{form.room(placeholder="Number of rooms", class_="form-control")}}
+                    {% for error in form.room.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{form.visitor(placeholder="Maximum number of visitors", class_="form-control")}}
+                    {% for error in form.visitor.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{form.city(placeholder="City", class_="form-control")}}
+                    {% for error in form.city.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{form.address(placeholder="Address", class_="form-control")}}
+                    {% for error in form.address.errors %}
+                    <span style="color: red;">*{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <p><input class="btn btn-outline-info" type="submit" value="Submit"></p>
+            </form>
+            <br>
+        </div>
+    </div> <!-- /container -->
+</main>
+{% endblock %}

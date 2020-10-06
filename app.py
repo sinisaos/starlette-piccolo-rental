@@ -9,6 +9,8 @@ from starlette.staticfiles import StaticFiles
 
 from accounts.routes import accounts_routes
 from accounts.tables import UserAuthentication
+from ads.routes import ads_routes
+from ads.tables import Ad, Image, Notification, Rent, Review
 from home.endpoints import HomeEndpoint
 from settings import SECRET_KEY, templates
 
@@ -26,10 +28,11 @@ app = Starlette(debug=True, routes=routes)
 
 app.mount(
     "/admin/",
-    create_admin(tables=[]),
+    create_admin(tables=[Ad, Review, Image, Rent, Notification]),
 )
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/accounts", accounts_routes)
+app.mount("/ads", ads_routes)
 
 app.add_middleware(AuthenticationMiddleware, backend=UserAuthentication())
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)

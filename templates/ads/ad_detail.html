@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block content %}
+<main role="main">
+    <br><br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card border-primary mb-3">
+                    <div class="card-body">
+                        {% if rent_error %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            {{ rent_error }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        {% endif %}
+                        <form id="rentForm" class="form form-rent" method="POST" action="" role="form">
+                            {{ form.csrf_token }}
+                            <div class="form-group">
+                                <label>Check-in date:</label><br>
+                                {{form.start_date(class_="form-control")}}
+                            </div>
+                            <div class="form-group">
+                                <label>Check-out date:</label><br>
+                                {{form.end_date(class_="form-control")}}
+                            </div>
+                            {% if request.user.is_authenticated %}
+                            <p><input class="btn btn-primary" style="width:100%" type="submit" value="Submit"></p>
+                            {% else %}
+                            <a href="{{ url_for('login') }}?next={{ path }}" class="btn btn-primary"
+                                style="width:100%">Submit</a>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+                <br>
+            </div>
+            <div class="col-md-5">
+                {{ item["ad_rent"] }}
+                <h4><b>{{ item.title }}</b>
+                    <small class="float-right"><i class="fa fa-star" aria-hidden="true" title="Average Rate"></i><span
+                            class="badge badge-pill badge-info">
+                            {% if review_avg %}{{ '%0.2f'| format(review_avg) |float }}{% else %}0{% endif %}</span><b>
+                            {{ item.price }}
+                            kn</b></small></h4>
+                <p><small>Posted on <i>{{ item.created.strftime('%d-%m-%Y %H:%M:%S') }}</i> by
+                        <b>{{ item["ad_user.username"] }}</b> at <a href="{{ url_for('maps', city=item.city) }}"><i
+                                class="fa fa-map-marker" style="font-size: 20px; color: black" aria-hidden="true"
+                                title="Location"></i></a><b>
+                            {{ item.city }}, {{ item.address }}</b></small></p>
+
+                <p class="mb-1">{{ item.content }}</p>
+                <hr>
+                {% if request.user.is_authenticated %}
+                <h3 class="float-left">{{ review_count }} review(s)</h3>
+                <a href="{{ url_for('review_create') }}?next={{ path }}" class="btn btn-primary float-right">Post
+                    review</a>
+                <br><br>
+                <hr>
+                {% else %}
+                <h3 class="float-left">{{ review_count }} review(s)</h3>
+                <a href="{{ url_for('login') }}?next={{ path }}" class="btn btn-primary float-right">Post review</a>
+                <br><br>
+                <hr>
+                {% endif %}
+                {% for result in review_results[:3] %}
+                <p><small class="float-left">Posted on <i>{{ result.created.strftime('%d-%m-%Y %H:%M:%S') }}</i> by
+                        <b>{{ result["review_user.username"] }}</b><b>
+                        </b></small></p>
+                <br>
+                <p>{{ result.content }}</p>
+                <i class="fa fa-star" aria-hidden="true"></i><span class="badge badge-pill badge-info">
+                    {{ result.review_grade }}</span>
+                <hr>
+                {% endfor %}
+                <div class="col text-center">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reviewModal">
+                        All reviews
+                    </button>
+                </div>
+                <hr>
+                <!-- The Modal -->
+                <div class="modal" id="reviewModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">All reviews ({{ review_count }})</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                {% for result in review_results %}
+                                <p><small class="float-left">Posted on
+                                        <i>{{ result.created.strftime('%d-%m-%Y %H:%M:%S') }}</i> by
+                                        <b>{{ result["review_user.username"] }}</b><b>
+                                        </b></small></p>
+                                <br>
+                                <p>{{ result.content }}</p>
+                                <i class="fa fa-star" aria-hidden="true"></i><span class="badge badge-pill badge-info">
+                                    {{ result.review_grade }}</span>
+                                <hr>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <span>* Availability - gray dates is already rented</span><br>
+                <hr>
+                <div id="calendar"></div>
+                <hr>
+                <div id="slider">
+                    <div class="carousel">
+                        <ul class="carousel_inner">
+                            {% if images %}
+                            {% for img in images %}
+                            <li class="item" style="background-image: url(../../{{ img['path'] }});"
+                                data-url="../../{{ img['path'] }}">
+                            </li>
+                            {% endfor %}
+                            {% else %}
+
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <hr>
+    </div> <!-- /container -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+        integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', path='/js/wimmViewer.min.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/availability-calendar.min.js') }}"></script>
+    <script type="text/javascript">
+        $('#slider').WimmViewer({
+            miniaturePosition: 'bottom', // 'top'|'bottom'
+            miniatureWidth: 200,
+            miniatureHeight: 150,
+            miniatureSpace: 5,
+            viewerMaxHeight: false,
+            {% if not images %}
+        <h2> No images </h2>
+        {% else %}
+        nextText: 'NEXT <span class="fa fa-caret-right"></span>',
+            prevText: '<span class="fa fa-caret-left"></span> PREV',
+                {% endif %}
+        onImgChange: function () { },
+        onNext: function () { },
+        onPrev: function () { }
+
+        });
+    </script>
+    <script>
+        var unavailableDates = [
+            {% for r in rented_apartments %}
+        { start: '{{ r.start_date }}', end: '{{ r.end_date }}' },
+        {% endfor %}
+        ];
+        $('#calendar').availabilityCalendar(unavailableDates);
+    </script>
+</main>
+{% endblock %}

@@ -11,3 +11,5 @@ DB_PORT = config("DB_PORT")
 SECRET_KEY = config("SECRET_KEY")
 templates = Jinja2Templates(directory="templates")
 BASE_HOST = "http://localhost:8000"
+# uncomment for Dropzone upload to filesystem
+UPLOAD_FOLDER = "static/uploads"

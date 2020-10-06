@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<main role="main">
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% include 'ads/search_form.html' %}
+            </div>
+            {% if results %}
+            <div class="col-md-12">
+                <h3>{{ count }} result(s)</h3><br>
+            </div>
+            {% for item in results %}
+            <div class="col-md-3">
+                <div class="card mb-4 shadow-sm">
+                    <h1>
+                        <a href="{{ url_for('ad', id=item.id , slug=item.slug) }}">
+                            {% if item.ad_image[:1] %}
+                            {% for img in item.ad_image[:1] %}
+                            <img src="{{ img.path }}" style="width: 100%; height: 200px;">
+                            {% endfor %}
+                            {% else %}
+                            <img src="{{ url_for('static', path='/images/not-available.png') }}"
+                                style="width: 100%; height: 200px;">
+                            {% endif %}
+                        </a>
+                    </h1>
+                    <p style="margin:10px;">{{ item.title[:12] }}...<b class="float-right">{{ item.price }} kn</b></p>
+                    <p style="margin:10px;"><i class="fa fa-eye" aria-hidden="true" title="Views">
+                            {{ item.view }}</i>&ensp;
+                        <i class="fa fa-comment" aria-hidden="true" title="Reviews"> {{ item.ad | length }}
+                        </i>&ensp;
+                        <i class="fa fa-star" aria-hidden="true" title="Average reviews">
+                            {% if item.ad %}
+                            {% set avg = [] %}
+                            {% for num in item.ad %}
+                            {% if avg.append(num.review_grade) %}{% endif %}
+                            {% endfor %}
+                            {{ '%0.2f'| format(avg | sum / avg | count) |float }}
+                            {% else %}
+                            0
+                            {% endif %}
+                        </i>&ensp;
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col-md-3">
+                <h4>No available ads</h4>
+            </div>
+            {% endif %} 
+        </div>
+        {% include 'ads/pagination.html' %}
+        <br>
+        <br>
+    </div> <!-- /container -->
+    <hr>
+</main>
+{% endblock %}

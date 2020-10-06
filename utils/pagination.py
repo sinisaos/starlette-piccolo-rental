@@ -157,7 +157,7 @@ def get_page_controls(
 class Pagination:
     page_query: str
     count: int
-    page_size: int = 2  # change to set more result per page
+    page_size: int = 4  # change to set more result per page
 
     def total_pages(self) -> int:
         return max(ceil(self.count / self.page_size), 1)
