@@ -50,7 +50,9 @@
                                 title="Location"></i></a><b>
                             {{ item.city }}, {{ item.address }}</b></small></p>
 
-                <p class="mb-1">{{ item.content }}</p>
+                <p class="mb-1"><b>Description:</b></br> {{ item.content }}</p>
+                <p class="mb-1"><b>Number of rooms:</b> {{ item.room }} room(s)</p>
+                <p class="mb-1"><b>Number of guests:</b> {{ item.visitor }} guest(s)</p>
                 <hr>
                 {% if request.user.is_authenticated %}
                 <h3 class="float-left">{{ review_count }} review(s)</h3>

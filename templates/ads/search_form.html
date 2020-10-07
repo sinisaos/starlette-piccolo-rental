@@ -1,8 +1,40 @@
-<form method='GET' action="{{ url_for('search') }}">
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i></span>
-        </div>
-        <input type="text" class="form-control" name="q" placeholder="Search ads">
-    </div>
+<style>
+    form {
+        display: inline-block;
+        position: relative;
+    }
+
+    form input {
+        padding-right: 4.6em;
+        width: 100%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .form-control {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        #search_form {
+            float: center;
+            width: 100%;
+        }
+
+        #button {
+            width: 100%;
+        }
+    }
+
+    @media only screen and (min-width: 600px) {
+        #search_form {
+            float: right;
+            width: 30%;
+        }
+
+    }
+</style>
+<form method='GET' action="{{ url_for('search') }}" id="search_form">
+    <input type='text' name='q' class="form-control" placeholder='Search ads' />
+    <button class="btn btn-outline-info" style="position: absolute;top: 0;right: 0;"><i class="fa fa-search"
+            aria-hidden="true"></i></button>
 </form>

@@ -6,8 +6,17 @@
         <div class="row">
             <div class="col-md-12">
                 {% include 'ads/search_form.html' %}
+                {% if request.user.is_authenticated %}
+                <a id="button" class="btn btn-outline-success float-left" href="{{ url_for('ad_create') }}"><i
+                        class="fa fa-plus" aria-hidden="true"></i> Add
+                    apartment</a>
+                {% else %}
+                <a id="button" class="btn btn-outline-success float-left"
+                    href="{{ url_for('login') }}?next=/ads/create"><i class="fa fa-plus" aria-hidden="true"></i>Add
+                    apartment</a>
+                {% endif %}
             </div>
-            {% if results %}
+            <br><br><br>
             {% for item in results %}
             <div class="col-md-3">
                 <div class="card mb-4 shadow-sm">
@@ -25,29 +34,26 @@
                     </p>
                     <p style="margin:10px;"><i class="fa fa-eye" aria-hidden="true" title="Views">
                             {{ item[0].view }}</i>&ensp;
-                        <i class="fa fa-comment" aria-hidden="true" title="Reviews"> {{ item[0].ad | length }}
+                        <i class="fa fa-comment" aria-hidden="true" title="Reviews"> {{ item[2] }}
                         </i>&ensp;
                         <i class="fa fa-star" aria-hidden="true" title="Average reviews">
-                            {% if item[0].ad %}
-                            {% set avg = [] %}
-                            {% for num in item[0].ad %}
-                            {% if avg.append(num.review_grade) %}{% endif %}
-                            {% endfor %}
-                            {{ '%0.2f'| format(avg | sum / avg | count) |float }}
+                            {% for i in item[3] %}
+                            {% if i["review_grade"] %}
+                            {{ i["review_grade"] }}
+                            {% endif %}
                             {% else %}
                             0
-                            {% endif %}
+                            {% endfor %}
                         </i>&ensp;
                     </p>
                 </div>
             </div>
-            {% endfor %}
             {% else %}
-            <div class="col-md-3">
+            <div class="col-md-12">
                 <br>
-                <h4>No ads</h4>
-            </div>
-            {% endif %} 
+                <h4>Currently no apartments that match search criteria</h4>
+            </div> 
+            {% endfor %}
         </div>
         {% include 'ads/pagination.html' %}
         <br>

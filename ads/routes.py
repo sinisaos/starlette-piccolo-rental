@@ -1,9 +1,9 @@
 from starlette.routing import Route, Router
 
 from ads.endpoints import (ad, ad_create, ad_delete, ad_edit, ad_images,
-                           ads_list, edit_upload, image_delete, image_edit,
-                           maps, review_create, review_delete, review_edit,
-                           search, upload)
+                           ads_list, edit_upload, filter_search, image_delete,
+                           image_edit, maps, review_create, review_delete,
+                           review_edit, search, upload)
 
 ads_routes = Router(
     [
@@ -78,6 +78,12 @@ ads_routes = Router(
             name="review_delete",
         ),
         Route("/search", endpoint=search, methods=["GET"], name="search"),
+        Route(
+            "/filter-search",
+            endpoint=filter_search,
+            methods=["GET"],
+            name="filter_search",
+        ),
         Route("/map/{city:str}", endpoint=maps, methods=["GET"], name="maps"),
     ]
 )

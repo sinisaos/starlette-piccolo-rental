@@ -6,44 +6,47 @@
     <div class="row">
       <div class="col-lg-6 col-md-10 col-12 d-flex flex-column justify-content-center align-items-center">
         <div class="hero-text">
-          <form>
+          <form method="GET" action="{{ url_for('filter_search') }}">
             <div class="row no-margin">
               <div class="col-sm-12">
                 <div class="form-group">
                   <span class="form-label">Locations*</span>
-                  <input class="form-control" type="text" placeholder="Search locations" required>
+                  <input id="cityInput" type="text" name="city" class="form-control search-slt"
+                    placeholder="Enter location" required>
                 </div>
               </div>
               <div class="col-sm-6">
                 <div class="form-group">
                   <span class="form-label">Check In*</span>
-                  <input class="form-control" type="date" required>
+                  <input id="checkIn" type="text" name="start" placeholder="Check In" onfocus="(this.type='date')"
+                    onblur="(this.type='text')" class="form-control search-slt" required>
                 </div>
               </div>
               <div class="col-sm-6">
                 <div class="form-group">
                   <span class="form-label">Check Out*</span>
-                  <input class="form-control" type="date" required>
+                  <input id="checkOut" class="form-control" name="end" type="text" placeholder="Check Out"
+                    onfocus="(this.type='date')" onblur="(this.type='text')" class="form-control search-slt" required>
                 </div>
               </div>
             </div>
             <div class="form-group">
               <span class="form-label">Guests*</span>
-              <select class="form-control" required>
+              <select class="form-control" name="guests" id="guests" required>
                 <option value="" selected hidden>Number of guests</option>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option>6</option>
-                <option>7</option>
-                <option>8</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
               </select>
               <span class="select-arrow"></span>
             </div>
 
-            <button class="btn btn-outline-info">Search</button>
+            <button class="btn btn-outline-info" onclick="DateCheck()">Search</button>
 
           </form>
         </div>
@@ -76,4 +79,15 @@
     </div>
   </div>
 </section>
+<script>
+  function DateCheck() {
+    var StartDate = document.getElementById('checkIn').value;
+    var EndDate = document.getElementById('checkOut').value;
+    var eDate = new Date(EndDate);
+    var sDate = new Date(StartDate);
+    if (sDate > eDate) {
+      alert("Please ensure that the ckeck out date is greater than to the check in date.");
+    }
+  }
+</script>
 {% endblock %}

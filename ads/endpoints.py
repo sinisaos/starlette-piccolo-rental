@@ -23,6 +23,7 @@ async def ads_list(request):
     """
     a = Ad
     i = Image
+    r = Review
     # pagination
     page_query = pagination.get_page_number(url=request.url)
     count = await a.count().run()
@@ -38,6 +39,13 @@ async def ads_list(request):
         await i.select().where(i.ad_image == item["id"]).first().run()
         for item in results
     ]
+    review_count = [
+        await r.count().where(r.ad == item["id"]).run() for item in results
+    ]
+    review_stars = [
+        await r.select(r.review_grade).where(r.ad == item["id"]).run()
+        for item in results
+    ]
     page_controls = pagination.get_page_controls(
         url=request.url,
         current_page=paginator.current_page(),
@@ -47,7 +55,7 @@ async def ads_list(request):
         "ads/ads_list.html",
         {
             "request": request,
-            "results": zip(results, image_results),
+            "results": zip(results, image_results, review_count, review_stars),
             "page_controls": page_controls,
         },
     )
@@ -532,6 +540,7 @@ async def search(request):
     """
     a = Ad
     i = Image
+    r = Review
     count = await a.count().run()
     page_query = pagination.get_page_number(url=request.url)
     q = request.query_params["q"]
@@ -548,6 +557,13 @@ async def search(request):
         await i.select().where(i.ad_image == item["id"]).first().run()
         for item in results
     ]
+    review_count = [
+        await r.count().where(r.ad == item["id"]).run() for item in results
+    ]
+    review_stars = [
+        await r.select(r.review_grade).where(r.ad == item["id"]).run()
+        for item in results
+    ]
     page_controls = pagination.get_page_controls(
         url=request.url,
         current_page=paginator.current_page(),
@@ -557,7 +573,61 @@ async def search(request):
         "ads/ads_list.html",
         {
             "request": request,
-            "results": zip(results, image_results),
+            "results": zip(results, image_results, review_count, review_stars),
+            "page_controls": page_controls,
+            "count": count,
+        },
+    )
+
+
+async def filter_search(request):
+    """
+    Filter search questions by city and available ads (not rented ads in
+    required time)
+    """
+    a = Ad
+    i = Image
+    r = Review
+    city = request.query_params["city"]
+    start = request.query_params["start"]
+    end = request.query_params["end"]
+    guests = request.query_params["guests"]
+    page_query = pagination.get_page_number(url=request.url)
+    if start > end:
+        return RedirectResponse(url="/")
+    # available apartment (not rented apartment in required time)
+    results = await a.raw(
+        f"SELECT * FROM ad WHERE ad.id NOT IN "
+        f"(SELECT a.id FROM ad AS a JOIN rent AS r "
+        f"ON a.id = r.ad_rent WHERE "
+        f"('{start}' <= r.end_date::date "
+        f"AND '{end}' >= r.start_date::date)) "
+        f"AND ad.visitor = '{guests}' "
+        f"AND ad.city ILIKE '%{city}%';"
+    ).run()
+    count = len(results)
+    paginator = pagination.Pagination(page_query, count)
+    image_results = [
+        await i.select().where(i.ad_image == item["id"]).first().run()
+        for item in results
+    ]
+    review_count = [
+        await r.count().where(r.ad == item["id"]).run() for item in results
+    ]
+    review_stars = [
+        await r.select(r.review_grade).where(r.ad == item["id"]).run()
+        for item in results
+    ]
+    page_controls = pagination.get_page_controls(
+        url=request.url,
+        current_page=paginator.current_page(),
+        total_pages=paginator.total_pages(),
+    )
+    return templates.TemplateResponse(
+        "ads/ads_list.html",
+        {
+            "request": request,
+            "results": zip(results, image_results, review_count, review_stars),
             "page_controls": page_controls,
             "count": count,
         },
