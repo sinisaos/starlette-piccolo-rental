@@ -37,13 +37,15 @@
                         <i class="fa fa-comment" aria-hidden="true" title="Reviews"> {{ item[2] }}
                         </i>&ensp;
                         <i class="fa fa-star" aria-hidden="true" title="Average reviews">
-                            {% for i in item[3] %}
-                            {% if i["review_grade"] %}
-                            {{ i["review_grade"] }}
-                            {% endif %}
+                            {% if item[3] %}
+                            {% set avg = [] %}
+                            {% for num in item[3] %}
+                            {% if avg.append(num.review_grade) %}{% endif %}
+                            {% endfor %}
+                            {{ '%0.2f'| format(avg | sum / avg | count) |float }}
                             {% else %}
                             0
-                            {% endfor %}
+                            {% endif %}
                         </i>&ensp;
                     </p>
                 </div>

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Created</th>
+                    <th>Views</th>
+                    <th>Price</th>
+                    <th>No. of rooms</th>
+                    <th>No. of guests</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in ads %}
+                <tr>
+                    <td>{{ item.title }}</td>
+                    <td>
+                        <p>{{ item.content[:50] }}...</p>
+                    </td>
+                    <td>{{ item.created.strftime('%d-%m-%Y %H:%M:%S') }}</td>
+                    <td>{{ item.view }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.room }}</td>
+                    <td>{{ item.visitor }}</td>
+                    <td>{{ item.address }}</td>
+                    <td>{{ item.city }}</td>
+                    <td>
+                        <form action="/ads/delete/{{ item.id }}" method="post">
+                            <a href="/ads/edit/{{ item.id }}" class="btn btn-info"><i class="fa fa-edit"></i></a>
+                            <button class="btn btn-danger"><i class="fa fa-trash"></i></button><br>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% include 'ads/pagination.html' %}
+    </div>
+</div>
+{% endblock %}

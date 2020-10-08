@@ -65,7 +65,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">{{ request.user.username|capitalize }}</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href=""><i
+              <a class="dropdown-item" href="{{ url_for('profile') }}"><i
                   class=" fas fa-fw fa-tachometer-alt fa-sm fa-fw mr-2 text-gray-400"></i>Profile</a>
               <a class="dropdown-item" href="{{ url_for('logout') }}"><i
                   class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Logout</a>

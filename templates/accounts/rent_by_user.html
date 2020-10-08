@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main role="main">
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Rented item</th>
+                                <th>Rented by client</th>
+                                <th>Apartment owner</th>
+                                <th>Check-in date</th>
+                                <th>Check-out date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in rented_from_me %}
+                            <tr>
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.usr }}</td>
+                                <td>{{ item.owner }}</td>
+                                <td>{{ item.start_date.strftime('%d-%m-%Y') }}</td>
+                                <td>{{ item.end_date.strftime('%d-%m-%Y') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

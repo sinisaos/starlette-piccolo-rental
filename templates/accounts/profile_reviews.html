@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Content</th>
+                    <th>Created</th>
+                    <th>Stars</th>
+                    <th>Review user</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in reviews %}
+                <tr>
+                    <td>
+                        <p>{{ item.content[:50] }}...</p>
+                    </td>
+                    <td>{{ item.created.strftime('%d-%m-%Y %H:%M:%S') }}</td>
+                    <td>{{ item.review_grade }}</td>
+                    <td>{{ item["review_user.username"] }}</td>
+                    <td>
+                        <form action="/ads/review-delete/{{ item.id }}" method="post">
+                            <a href="/ads/review-edit/{{ item.id }}" class="btn btn-info"><i class="fa fa-edit"></i></a>
+                            <button class="btn btn-danger"><i class="fa fa-trash"></i></button><br>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% include 'ads/pagination.html' %}
+    </div>
+</div>
+{% endblock %}

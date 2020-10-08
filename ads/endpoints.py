@@ -304,37 +304,54 @@ async def ad_edit(request):
     a = Ad
     i = Image
     request_path_id = request.path_params["id"]
-    ad = await get_ads().where(a.id == request_path_id).first().run()
-    images = await i.select().where(i.ad_image == ad["id"]).run()
-    data = await request.form()
-    form = AdEditForm(data)
-    new_form_value, form.content.data = form.content.data, ad["content"]
-    title = form.title.data
-    if request.method == "POST" and form.validate():
-        await a.update(
-            {
-                a.title: title,
-                a.slug: "-".join(title.lower().split()),
-                a.content: new_form_value,
-                a.price: form.price.data,
-                a.room: form.room.data,
-                a.visitor: form.visitor.data,
-                a.city: form.city.data,
-                a.address: form.address.data,
-            }
-        ).where(a.id == request_path_id).run()
-        return RedirectResponse(
-            url=f"/ads/image-edit/{ad['id']}", status_code=302
+    # only ad owner can edit ad
+    try:
+        ad = (
+            await get_ads()
+            .where(
+                (a.id == request_path_id)
+                & (a.ad_user.username == request.user.username)
+            )
+            .first()
+            .run()
         )
-    return templates.TemplateResponse(
-        "ads/ad_edit.html",
-        {
-            "request": request,
-            "form": form,
-            "ad": ad,
-            "images": images,
-        },
-    )
+        images = await i.select().where(i.ad_image == ad["id"]).run()
+        data = await request.form()
+        form = AdEditForm(data)
+        new_form_value, form.content.data = form.content.data, ad["content"]
+        title = form.title.data
+        if request.method == "POST" and form.validate():
+            await a.update(
+                {
+                    a.title: title,
+                    a.slug: "-".join(title.lower().split()),
+                    a.content: new_form_value,
+                    a.price: form.price.data,
+                    a.room: form.room.data,
+                    a.visitor: form.visitor.data,
+                    a.city: form.city.data,
+                    a.address: form.address.data,
+                }
+            ).where(a.id == request_path_id).run()
+            return RedirectResponse(
+                url=f"/ads/image-edit/{ad['id']}", status_code=302
+            )
+        return templates.TemplateResponse(
+            "ads/ad_edit.html",
+            {
+                "request": request,
+                "form": form,
+                "ad": ad,
+                "images": images,
+            },
+        )
+    except TypeError:
+        return templates.TemplateResponse(
+            "403.html",
+            {
+                "request": request,
+            },
+        )
 
 
 @requires("authenticated")
@@ -464,7 +481,7 @@ async def ad_delete(request):
         # ]
         # cloudinary.api.delete_resources(public_ids)
         await a.delete().where(a.id == request_path_id).run()
-        return RedirectResponse(url="/ads", status_code=302)
+        return RedirectResponse(url="/account/profile", status_code=302)
 
 
 @requires("authenticated")
@@ -508,19 +525,41 @@ async def review_edit(request):
     """
     r = Review
     request_path_id = request.path_params["id"]
-    review = await r.select().where(r.id == request_path_id).first().run()
-    data = await request.form()
-    form = ReviewEditForm(data)
-    new_form_value, form.content.data = form.content.data, review["content"]
-    if request.method == "POST" and form.validate():
-        await r.update(
-            {r.content: new_form_value, r.review_grade: int(form.grade.data)}
-        ).where(r.id == int(request_path_id)).run()
-        return RedirectResponse(url="/ads", status_code=302)
-    return templates.TemplateResponse(
-        "ads/review_edit.html",
-        {"request": request, "form": form, "review": review},
-    )
+    try:
+        review = (
+            await r.select()
+            .where(
+                (r.id == request_path_id)
+                & (r.review_user.username == request.user.username)
+            )
+            .first()
+            .run()
+        )
+        data = await request.form()
+        form = ReviewEditForm(data)
+        new_form_value, form.content.data = (
+            form.content.data,
+            review["content"],
+        )
+        if request.method == "POST" and form.validate():
+            await r.update(
+                {
+                    r.content: new_form_value,
+                    r.review_grade: int(form.grade.data),
+                }
+            ).where(r.id == int(request_path_id)).run()
+            return RedirectResponse(url="/ads", status_code=302)
+        return templates.TemplateResponse(
+            "ads/review_edit.html",
+            {"request": request, "form": form, "review": review},
+        )
+    except TypeError:
+        return templates.TemplateResponse(
+            "403.html",
+            {
+                "request": request,
+            },
+        )
 
 
 @requires("authenticated")

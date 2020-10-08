@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main role="main">
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="list-group">
+                    <li class="list-group-item text-muted">Profile &nbsp;<i class="fas fa-user"></i></li>
+                    {% for user in results %}
+                    <li class="list-group-item text-right"><span
+                            class="float-left"><strong>Username</strong></span><span
+                            class="float-right">{{ user.username }}</span>
+                    </li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Email</strong></span><span
+                            class="float-right">{{ user.email }}</span>
+                    </li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong><a
+                                    href="{{ url_for('profile_ads') }}">Ads</a></strong></span><span
+                            class="float-right">{{ ads_count }}</span>
+                    </li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong><a
+                                    href="{{ url_for('profile_reviews') }}">Reviews</a></strong></span><span
+                            class="float-right">{{ reviews_count }}</span>
+                    </li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong><a
+                                    href="{{ url_for('profile_notifications') }}">Notifications
+                                    &nbsp;</a></strong>
+                            <span class="badge badge-pill badge-danger float-right" title="Unread notifications">
+                                {{ unread_notifications_count }}</span>
+                        </span><span class="float-right">{{ notifications_count }}</span>
+                    </li>
+                    <li class="list-group-item text-muted">Booking statistics &nbsp;<i class="fas fa-chart-line"></i>
+                    <li class="list-group-item text-right"><span class="float-left"><strong><a
+                                    href="{{ url_for('profile_rented_by_user') }}">Rent by
+                                    user</a></strong></span>
+                    </li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong><a
+                                    href="{{ url_for('profile_rented_from_user') }}">Rent from
+                                    user</a></strong></span>
+                    </li>
+                    <li class="list-group-item text-right"><span class="float-right">
+                            <form action="/accounts/user-delete/{{ user.id }}" method="post">
+                                <button class="btn btn-danger float-right"
+                                    onclick="return confirm('Are you sure you want to delete your account? Deleting your account cannot be undone !!!');">
+                                    <i lass="fa fa-trash">
+                                    </i> Delete
+                                    account</button><br>
+                            </form>
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <br><br>
+            </div>
+        </div>
+    </div> <!-- /container -->
+</main>
+{% endblock %}

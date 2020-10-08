@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Message</th>
+                    <th>Sent by</th>
+                    <th>Sent at</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in notifications %}
+                <tr>
+                    <td>{{ item.message }}</td>
+                    <td>{{ item["sender.username"] | title }}</td>
+                    <td>{{ item.created.strftime('%d-%m-%Y %H:%M:%S') }}</td>
+                    <td>
+                        {% if item.is_read == False %}
+                        <form action="/accounts/read/{{ item.id }}" method="post">
+                            <button class="btn btn-danger">Mark as read</button><br>
+                        </form>
+                        {% else %}
+                        <p class="btn btn-success">Already read</p><br>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <thead>
+
+            {% include 'ads/pagination.html' %}
+    </div>
+</div>
+{% endblock %}
