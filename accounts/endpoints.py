@@ -1,11 +1,12 @@
 import os
+
 from starlette.authentication import requires
 from starlette.responses import RedirectResponse
 
 from accounts.forms import LoginForm, RegistrationForm
 from accounts.tables import User, generate_jwt
-from ads.tables import Ad, Review, Rent, Notification, Image
 from ads.helpers import get_ads, get_reviews
+from ads.tables import Ad, Image, Notification, Rent, Review
 from settings import BASE_HOST, templates
 from utils import pagination
 

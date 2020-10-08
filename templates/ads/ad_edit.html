@@ -1,5 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+    .card mb-3 shadow-sm overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        transition: .3s ease;
+        background-color: red;
+    }
+
+    .icon {
+        color: white;
+        font-size: 25px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        text-align: center;
+        cursor: pointer;
+    }
+</style>
 <main role="main">
     <div class="container">
         <div class="col-md-8 offset-md-2">
@@ -7,15 +33,17 @@
             <br />
             {% for img in images %}
             <div class="col-md-3" style="display:inline-block;">
-                <div class="card mb-3 shadow-sm">
+                <div class="overlay">
                     <img src="../../{{ img.path }}" style="width: 100%; height: 200px;"><br>
                     <form action="/ads/image-delete/{{ img.id }}" method="post">
                         <input type="hidden" name="aid" value="{{ ad.id }}">
-                        <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                        <button class="icon btn btn-link" title="Delete image">
+                            <i class="fas fa-trash-alt"></i></button>
                     </form>
                 </div>
             </div>
             {% endfor %}
+            <br><br>
             <form id="adEditForm" class="form form-ad-edit" method="POST" action="" role="form">
                 {{ form.csrf_token }}
                 <div class="form-group">

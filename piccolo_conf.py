@@ -19,5 +19,6 @@ APP_REGISTRY = AppRegistry(
         "piccolo.apps.user.piccolo_app",
         "home.piccolo_app",
         "accounts.piccolo_app",
+        "ads.piccolo_app",
     ]
 )

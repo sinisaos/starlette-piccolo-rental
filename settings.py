@@ -13,3 +13,6 @@ templates = Jinja2Templates(directory="templates")
 BASE_HOST = "http://localhost:8000"
 # uncomment for Dropzone upload to filesystem
 UPLOAD_FOLDER = "static/uploads"
+# for Cloudinary uploads
+# CLOUDINARY_API_KEY = config("CLOUDINARY_API_KEY")
+# CLOUDINARY_API_SECRET = config("CLOUDINARY_API_SECRET")

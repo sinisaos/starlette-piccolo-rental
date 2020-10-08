@@ -1,18 +1,9 @@
 from starlette.routing import Route, Router
 
-from accounts.endpoints import (
-    login,
-    logout,
-    register,
-    profile,
-    user_delete,
-    profile_ads,
-    profile_reviews,
-    profile_notifications,
-    read_notification,
-    profile_rented_by_user,
-    profile_rented_from_user,
-)
+from accounts.endpoints import (login, logout, profile, profile_ads,
+                                profile_notifications, profile_rented_by_user,
+                                profile_rented_from_user, profile_reviews,
+                                read_notification, register, user_delete)
 
 accounts_routes = Router(
     [
