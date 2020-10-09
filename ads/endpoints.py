@@ -42,9 +42,16 @@ async def ads_list(request):
     review_count = [
         await r.count().where(r.ad == item["id"]).run() for item in results
     ]
+    review_grades = []
+    for item in results:
+        review_grades.extend(
+            await r.raw(
+                f"SELECT ROUND(AVG(review_grade)::numeric,2) AS stars "
+                f"FROM review JOIN ad ON review.ad = {item['id']};"
+            ).run()
+        )
     review_stars = [
-        await r.select(r.review_grade).where(r.ad == item["id"]).run()
-        for item in results
+        0 if k["stars"] is None else k["stars"] for k in review_grades
     ]
     page_controls = pagination.get_page_controls(
         url=request.url,
@@ -378,18 +385,16 @@ async def image_edit(request):
 async def edit_upload(request):
     # edited ad id
     aid = int((request.url.path).split("/")[-1])
-    img_count = await Image.all().filter(ad_image_id=aid).count()
+    img_count = await i.count().where(i.ad_image == aid).run()
     data = await request.form()
     # list of remaining images paths
     images = [data["images" + str(i)] for i in range(3 - img_count)]
     # save images path and last inserted ad id to db
     for item in images:
         if item:
-            async with in_transaction() as conn:
-                await conn.execute_query(
-                    f"INSERT INTO image (path, ad_image_id) \
-                        VALUES ('{item}', {aid});"
-                )
+            await i.raw(
+            f"INSERT INTO image (path, ad_image) VALUES ('{item}', {aid});"
+        ).run()
     return RedirectResponse(BASE_HOST + f"/ads/edit/{aid}", status_code=302)
 
 """
@@ -441,7 +446,6 @@ async def image_delete(request):
             .run()
         )
         os.remove(img["path"])
-        # img = await Image.get(id=id)
         # delete related image
         # uncomment for Cloudinary
         # public_id = (img.path).split("/")[-1].split(".")[0]
@@ -476,12 +480,13 @@ async def ad_delete(request):
         #   api_key=CLOUDINARY_API_KEY,
         #    api_secret=CLOUDINARY_API_SECRET,
         # )
-        # public_ids = [
-        #    (img.path).split("/")[-1].split(".")[0] for img in images
-        # ]
-        # cloudinary.api.delete_resources(public_ids)
+        # if images:
+        #   public_ids = [
+        #       (img["path"]).split("/")[-1].split(".")[0] for img in images
+        #   ]
+        #   cloudinary.api.delete_resources(public_ids)
         await a.delete().where(a.id == request_path_id).run()
-        return RedirectResponse(url="/account/profile", status_code=302)
+        return RedirectResponse(url="/accounts/profile", status_code=302)
 
 
 @requires("authenticated")
@@ -599,9 +604,16 @@ async def search(request):
     review_count = [
         await r.count().where(r.ad == item["id"]).run() for item in results
     ]
+    review_grades = []
+    for item in results:
+        review_grades.extend(
+            await r.raw(
+                f"SELECT ROUND(AVG(review_grade)::numeric,2) AS stars "
+                f"FROM review JOIN ad ON review.ad = {item['id']};"
+            ).run()
+        )
     review_stars = [
-        await r.select(r.review_grade).where(r.ad == item["id"]).run()
-        for item in results
+        0 if k["stars"] is None else k["stars"] for k in review_grades
     ]
     page_controls = pagination.get_page_controls(
         url=request.url,
@@ -653,9 +665,16 @@ async def filter_search(request):
     review_count = [
         await r.count().where(r.ad == item["id"]).run() for item in results
     ]
+    review_grades = []
+    for item in results:
+        review_grades.extend(
+            await r.raw(
+                f"SELECT ROUND(AVG(review_grade)::numeric,2) AS stars "
+                f"FROM review JOIN ad ON review.ad = {item['id']};"
+            ).run()
+        )
     review_stars = [
-        await r.select(r.review_grade).where(r.ad == item["id"]).run()
-        for item in results
+        0 if k["stars"] is None else k["stars"] for k in review_grades
     ]
     page_controls = pagination.get_page_controls(
         url=request.url,

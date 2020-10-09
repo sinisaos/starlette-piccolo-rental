@@ -1,10 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+    @media screen and (min-width: 1280px) {
+        .col-md-12 {
+            padding: 123px;
+        }
+    }
+</style>
 <main role="main">
     <br>
     <div class="container">
         <div class="row">
-            <div class="col-md-12" style="padding: 120px;">
+            <div class="col-md-12">
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
                     integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
                     crossorigin="" />
@@ -31,7 +38,7 @@
             // Creating map options
             var mapOptions = {
                 center: [lat, lng],
-                zoom: 4
+                zoom: 10
             }
 
             // Creating a map object

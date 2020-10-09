@@ -16,9 +16,8 @@
                     apartment</a>
                 {% endif %}
             </div>
-            <br><br><br>
             {% for item in results %}
-            <div class="col-md-3">
+            <div class="col-md-3" style="padding-top: 15px;">
                 <div class="card mb-4 shadow-sm">
                     <h1>
                         <a href="{{ url_for('ad', id=item[0].id , slug=item[0].slug) }}">
@@ -37,15 +36,7 @@
                         <i class="fa fa-comment" aria-hidden="true" title="Reviews"> {{ item[2] }}
                         </i>&ensp;
                         <i class="fa fa-star" aria-hidden="true" title="Average reviews">
-                            {% if item[3] %}
-                            {% set avg = [] %}
-                            {% for num in item[3] %}
-                            {% if avg.append(num.review_grade) %}{% endif %}
-                            {% endfor %}
-                            {{ '%0.2f'| format(avg | sum / avg | count) |float }}
-                            {% else %}
-                            0
-                            {% endif %}
+                            {{ item[3] }}
                         </i>&ensp;
                     </p>
                 </div>
