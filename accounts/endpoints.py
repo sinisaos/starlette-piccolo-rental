@@ -1,3 +1,6 @@
+import cloudinary.api
+import cloudinary.uploader
+import cloudinary
 import os
 
 from starlette.authentication import requires
@@ -7,7 +10,12 @@ from accounts.forms import LoginForm, RegistrationForm
 from accounts.tables import User, generate_jwt
 from ads.helpers import get_ads, get_reviews
 from ads.tables import Ad, Image, Notification, Rent, Review
-from settings import BASE_HOST, templates
+from settings import (
+    BASE_HOST,
+    templates,
+    # CLOUDINARY_API_KEY,
+    # CLOUDINARY_API_SECRET,
+)
 from utils import pagination
 
 
@@ -320,15 +328,17 @@ async def user_delete(request):
                 image_list.append(v)
         # Cloudinary image deletion when user account is deleted
         # cloudinary.config(
-        #    cloud_name="rkl",
-        #   api_key=CLOUDINARY_API_KEY,
-        #   api_secret=CLOUDINARY_API_SECRET
-        # )
-        # public_ids = [img.split('/')[-1].split('.')[0] for img in image_list]
-        # cloudinary.api.delete_resources(public_ids)
+        #     cloud_name="rkl",
+        #     api_key=CLOUDINARY_API_KEY,
+        #     api_secret=CLOUDINARY_API_SECRET
+        #    )
+        # if image_list:
+        #     public_ids = [img.split('/')[-1].split('.')[0] for img in image_list]
+        #     cloudinary.api.delete_resources(public_ids)
         # Dropzone image deletion when user account is deleted
-        for img in image_list:
-            os.remove(img)
+        if image_list:
+            for img in image_list:
+                os.remove(img)
         await u.delete().where(u.id == request_path_id).run()
         request.session.clear()
         response = RedirectResponse("/", status_code=302)
