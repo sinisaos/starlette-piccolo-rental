@@ -1,6 +1,7 @@
-import cloudinary.api
-import cloudinary.uploader
-import cloudinary
+# uncomment for Cloudinary upload
+# import cloudinary.api
+# import cloudinary.uploader
+# import cloudinary
 import os
 
 from starlette.authentication import requires
