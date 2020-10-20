@@ -13,7 +13,9 @@ sudo -i -u yourpostgresusername psql
 CREATE DATABASE ads;
 \q
 touch .env
-mkdir static/uploads
+## for upload via Dropzone make upload folder in static
+## mkdir static/uploads
+
 ## put this in .env file
 ## DB_NAME="your db name"
 ## DB_USER="your db username"
@@ -37,6 +39,6 @@ uvicorn app:app --port 8000 --host 0.0.0.0
 Two options for upload images:
 1. DropzoneJS for upload images to filesystem
 2. Upload images to [Cloudinary](https://cloudinary.com/) because Heroku filesystem is not suitable for file upload.  
-   More info on link https://help.heroku.com/K1PPS2WM/why-are-my-file-uploads-missing-deleted. To upload images to Cloudinary sign up to [Cloudinary](https://cloudinary.com/) free account, set CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET to .env file and everything shoud be fine. 
+   More info on link https://help.heroku.com/K1PPS2WM/why-are-my-file-uploads-missing-deleted. To upload images to Cloudinary sign up to [Cloudinary](https://cloudinary.com/) free account, set CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET to .env file, comment UPLOAD_FOLDER in settings.py, then uncomment Cloudinary and comment Dropzone in endpoints and templates and everything shoud be fine. 
 
 After site is running log in as admin user and add ads, reviews etc. For non admin user you can sign up and post content.
